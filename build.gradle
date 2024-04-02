@@ -1,0 +1,34 @@
+plugins {
+    id 'java-library'
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
+project(':core') {
+    apply plugin: 'scala'
+
+    base {
+        archivesName = 'kafka_2.13'
+    }
+
+    dependencies {
+        implementation "org.scala-lang:scala-library:${scalaVersion}"
+    }
+
+    tasks.withType(ScalaCompile).configureEach {
+        scalaCompileOptions.additionalParameters = ['-release', '21']
+    }
+
+    tasks.register('copyDependencies', Copy) {
+        from configurations.compileClasspath
+        into project.layout.buildDirectory.dir("dependant-libs-${scalaVersion}")
+    }
+
+    tasks.named('assemble').configure {
+        dependsOn 'copyDependencies'
+    }
+}

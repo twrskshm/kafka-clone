@@ -1,1 +1,3 @@
-rootProject.name = 'kafka-clone'
+include 'core'
+
+rootProject.name = 'kafka'
